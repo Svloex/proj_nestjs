@@ -8,9 +8,9 @@ services:
       - '5432:5432'
     environment:
       - POSTGRES_HOST=localhost
-      - POSTGRES_USER=user-for-db
+      - POSTGRES_USER=user
       - POSTGRES_PASSWORD=pas123
-      - POSTGRES_DATABASE=nest-proj-db
+      - POSTGRES_DATABASE=base
     command: postgres
     restart: always
 
