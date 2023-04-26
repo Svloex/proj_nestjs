@@ -23,7 +23,7 @@ export class AuthService {
 
         return this.userService.createUser(dto)
     }
-    async loginUser(dto: UserLoginDto): Promise<AuthUserResponce> {
+    async loginUser(dto: UserLoginDto):Promise<any> {
         const exitUser = await this.userService.findUserByEmail(dto.email)
 
         if (!exitUser) throw new BadRequestException(AppError.USER_NOT_EXIST)
@@ -32,15 +32,16 @@ export class AuthService {
 
         if (!validatePassword) throw new BadRequestException(AppError.WRONG_DATA)
 
-        const userData = {
-            name: exitUser.firstName,
-            email: exitUser.email
-        }
-
-        const token = await this.tokenService.generateJwtToken(userData)
+        // const userData = {
+        //     name: exitUser.firstName,
+        //     email: exitUser.email
+        // }
 
         const user = await this.userService.publicUser(dto.email)
-        return { ...user, token }
+
+        const token = await this.tokenService.generateJwtToken(user)
+
+        return { user, token }
 
     }
 }

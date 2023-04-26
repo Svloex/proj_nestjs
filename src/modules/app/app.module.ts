@@ -8,31 +8,34 @@ import { SequelizeModule } from '@nestjs/sequelize';
 import { User } from '../user/models/user.model';
 import { AuthModule } from '../auth/auth.module';
 import { TokenModule } from '../token/token.module';
+import { WatchlistModule } from '../watchlist/watchlist.module';
+import { Watchlist } from '../watchlist/models/watchlist.model';
 
 @Module({
   imports: [
     ConfigModule.forRoot({
-    isGlobal: true,
-    load: [configurations]
-  }),
-  SequelizeModule.forRootAsync({
-    imports: [ConfigModule],
-    inject: [ConfigService],
-    useFactory: (configService: ConfigService) => ({
-      dialect: 'postgres',
-      host: configService.get('db_host'),
-      port: configService.get('db_port'),
-      database: configService.get('db_user'),
-      password: configService.get('db_password'),
-      username: configService.get('db_user'),
-      synchronize: true,
-      autoLoadModels: true,
-      models: [User]
+      isGlobal: true,
+      load: [configurations]
     }),
-  }),
+    SequelizeModule.forRootAsync({
+      imports: [ConfigModule],
+      inject: [ConfigService],
+      useFactory: (configService: ConfigService) => ({
+        dialect: 'postgres',
+        host: configService.get('db_host'),
+        port: configService.get('db_port'),
+        database: configService.get('db_user'),
+        password: configService.get('db_password'),
+        username: configService.get('db_user'),
+        synchronize: true,
+        autoLoadModels: true,
+        models: [User, Watchlist]
+      }),
+    }),
     UserModule,
     AuthModule,
-    TokenModule
+    TokenModule,
+    WatchlistModule
   ],
   controllers: [AppController],
   providers: [AppService],
