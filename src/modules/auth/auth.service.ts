@@ -17,31 +17,29 @@ export class AuthService {
     ) { }
 
     async registUsers(dto: CreateUserDto): Promise<CreateUserDto> {
-        const exitUser = await this.userService.findUserByEmail(dto.email)
-
-        if (exitUser) throw new BadRequestException(AppError.USER_EXIST)
-
-        return this.userService.createUser(dto)
+        try {
+            const exitUser = await this.userService.findUserByEmail(dto.email)
+            if (exitUser) throw new BadRequestException(AppError.USER_EXIST)
+            return this.userService.createUser(dto)
+        } catch (err) {
+            throw new Error(err)
+        }
     }
-    async loginUser(dto: UserLoginDto):Promise<any> {
-        const exitUser = await this.userService.findUserByEmail(dto.email)
-
-        if (!exitUser) throw new BadRequestException(AppError.USER_NOT_EXIST)
-
-        const validatePassword = bcrypt.compare(dto.password, exitUser.password)
-
-        if (!validatePassword) throw new BadRequestException(AppError.WRONG_DATA)
-
-        // const userData = {
-        //     name: exitUser.firstName,
-        //     email: exitUser.email
-        // }
-
-        const user = await this.userService.publicUser(dto.email)
-
-        const token = await this.tokenService.generateJwtToken(user)
-
-        return { user, token }
-
+    async loginUser(dto: UserLoginDto): Promise<AuthUserResponce> {
+        try {
+            const exitUser = await this.userService.findUserByEmail(dto.email)
+            if (!exitUser) throw new BadRequestException(AppError.USER_NOT_EXIST)
+            const validatePassword = bcrypt.compare(dto.password, exitUser.password)
+            if (!validatePassword) throw new BadRequestException(AppError.WRONG_DATA)
+            // const userData = {
+            //     name: exitUser.firstName,
+            //     email: exitUser.email
+            // }
+            const user = await this.userService.publicUser(dto.email)
+            const token = await this.tokenService.generateJwtToken(user)
+            return { user, token }
+        } catch (err) {
+            throw new Error(err)
+        }
     }
 }
