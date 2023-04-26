@@ -5,6 +5,7 @@ import { User } from './models/user.model';
 import * as bcrypt from 'bcrypt'
 import { CreateUserDto } from './dto';
 import { UpdateUserDto } from './dto';
+import { Watchlist } from '../watchlist/models/watchlist.model';
 // import { AppError } from 'src/common/constants/errors';
 // import { BadRequestException } from '@nestjs/common';
 
@@ -34,10 +35,24 @@ export class UserService {
         return dto
     }
 
+    // async publicUser(email: string) {
+    //     return this.userRepository.findOne({
+    //         where: { email },
+    //         attributes: { exclude: ['password}'] },
+    //         include: {
+    //             model: Watchlist,
+    //             required: false
+    //         }
+    //     })
+    // }
     async publicUser(email: string) {
-        return this.userRepository.findOne({
+        return await this.userRepository.findOne({
             where: { email },
-            attributes: { exclude: ['password'] }
+            attributes: { exclude: ['password'] },
+            include: {
+                model: Watchlist,
+                required: false
+            }
         })
     }
 
@@ -54,5 +69,8 @@ export class UserService {
         })
 
         return true
+    }
+    async getAllUsers() {
+        return await this.userRepository.findAll()
     }
 }

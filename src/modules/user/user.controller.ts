@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Patch, Req, UseGuards } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Patch, Req, UseGuards } from '@nestjs/common';
 import { UserService } from './user.service';
 import { UpdateUserDto } from './dto';
 import { JwtAuthGuard } from 'src/guards/jwt.guard';
@@ -37,6 +37,17 @@ export class UserController {
     deleteUser(@Req() request): Promise<boolean> {
         const user = request.user
         return this.userService.deleteUser(user.email)
+
+    }
+    // @ApiTags('API')
+    // @ApiResponse({
+    //     status: 200
+    // })
+    @UseGuards(JwtAuthGuard)
+    @Get('all')
+    getAllUsers(@Req() request){
+        const user = request.user
+        return this.userService.getAllUsers()
 
     }
 }
