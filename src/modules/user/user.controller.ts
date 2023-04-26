@@ -43,11 +43,11 @@ export class UserController {
     // @ApiResponse({
     //     status: 200
     // })
-    @UseGuards(JwtAuthGuard)
-    @Get('all')
-    getAllUsers(@Req() request){
-        const user = request.user
-        return this.userService.getAllUsers()
+    // @UseGuards(JwtAuthGuard)
+    // @Get('all')
+    // getAllUsers(@Req() request){
+    //     const user = request.user
+    //     return this.userService.getAllUsers()
 
-    }
+    // }
 }
